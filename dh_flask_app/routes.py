@@ -1,5 +1,5 @@
 import sqlalchemy
-from flask import Blueprint, request, jsonify, Response
+from flask import Blueprint, request, jsonify, Response, redirect
 from .extensions import db
 from .models import Url
 from .constants import *
@@ -38,7 +38,7 @@ def shortUrl(shortUrl):
         url = Url.query.filter_by(shortUrl=shortUrl).first()
         url.counter += 1
         db.session.commit()
-        return jsonify({"status": "success", "url": url.url}), OK
+        return redirect(url.url)
     except Exception as ex:
         return jsonify({"status": "failed", "Error": ex}), INVALID_DATA
 
