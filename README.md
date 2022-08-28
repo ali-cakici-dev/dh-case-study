@@ -92,3 +92,18 @@ flask createDB
 ```shell
 flask dropDB
 ```
+
+## Live Heroku demo
+
+* Check if server online
+https://dh-case-study.herokuapp.com/isOnline
+
+* Add Original Url to be Shortened
+https://dh-case-study.herokuapp.com/addUrl/www.mytest.com
+ This will return shortened url -> shortenedUrl
+
+* Redirection from shortened url:
+https://dh-case-study.herokuapp.com/shortenedUrl
+
+* Get All Urls:
+https://dh-case-study.herokuapp.com/getAll
