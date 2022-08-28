@@ -1,2 +1,2 @@
 FLASK_ENV=development
-FLASK_APP=dh-flask-app
+FLASK_APP=dh_flask_app
