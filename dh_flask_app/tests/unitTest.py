@@ -5,11 +5,11 @@ import json
 
 class TestFlask(unittest.TestCase):
     baseUrl = "http://127.0.0.1:5000"
-    testUrl = "www.test.co2nm"
-    shortUrl = "13e81dd6"
+    testUrl = "http://www.google.com"
+    shortUrl = "253d14"
 
     def test_server_online(self):
-        url = self.baseUrl + "/is_online"
+        url = self.baseUrl + "/isOnline"
         headers = {'Cache-Control': "no-cache"}
         r = requests.get(url, headers=headers, timeout=10).json()
         self.assertEqual(r["status"], "success", "Flask server offline")
