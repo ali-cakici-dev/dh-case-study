@@ -14,21 +14,25 @@ dhApp = Blueprint("main", __name__)
 def root():
     return jsonify({"status": "success"})
 
-
-@dhApp.route("/addURl", methods=["POST"])
-def add_url():
-    try:
-        data = request.get_json()
-    except Exception as ex:
-        return Response("Invalid Data:" + str(ex), INVALID_DATA, mimetype="application/json")
+@dhApp.route("/addUrl/<urlOriginal>", methods=["GET"])
+@dhApp.route("/addUrl", methods=["POST"])
+def add_url(urlOriginal=None):
+    if request.method == "GET":
+        url = urlOriginal
+    if request.method == "POST":
+        try:
+            data = request.get_json()
+            url = data["url"]
+        except Exception as ex:
+            return Response("Invalid Data:" + str(ex), INVALID_DATA, mimetype="application/json")
     urlHashed = ""
     while len(urlHashed) < 13:
         try:
-            urlHashed = urlhasher(data["url"], oldHash=urlHashed)
-            url = Url(url=data["url"], shortUrl=urlHashed, counter=0)
-            db.session.add(url)
+            urlHashed = urlhasher(url, oldHash=urlHashed)
+            urlObj = Url(url=url, shortUrl=urlHashed, counter=0)
+            db.session.add(urlObj)
             db.session.commit()
-            return jsonify({"status": "success", "shortUrl": urlHashed})
+            return urlHashed
         except sqlalchemy.exc.IntegrityError:
             db.session.rollback()
     return jsonify({"status": "failed"}), INVALID_DATA
@@ -37,6 +41,8 @@ def add_url():
 @dhApp.route("/<shortUrl>", methods=["GET"])
 def short_url(shortUrl):
     try:
+        if shortUrl in ["getAll", "addUrl", "isOnline"]:
+            return jsonify({"status": "failed"}), INVALID_DATA
         url = Url.query.filter_by(shortUrl=shortUrl).first()
         url.counter += 1
         db.session.commit()
